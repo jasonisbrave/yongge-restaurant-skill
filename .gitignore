@@ -1,0 +1,41 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Temp
+tmp/
+temp/
+*.tmp
+
+# Python (如果未来加脚本)
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+*.egg-info/
+
+# Node (如果未来加脚本)
+node_modules/
+package-lock.json
+yarn.lock
+
+# 本地草稿
+draft/
+*.draft.md
+NOTES.local.md
+
+# 抓取的原始 HTML（可选）
+raw-html/
