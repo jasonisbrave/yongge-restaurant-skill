@@ -7,14 +7,14 @@
 ```bash
 # 算账
 python tools/breakeven.py \
-  --daily-revenue 800 --daily-food-cost 250 \
-  --rent 8000 --labor 9000 --investment 350000 --category 奶茶
+--daily-revenue 800 --daily-food-cost 250 \
+--rent 8000 --labor 9000 --investment 350000 --category 奶茶
 
 # 快招评分
 python tools/quack_score.py \
-  --source "抖音广告" --hq-city 济南 \
-  --total-fee 580000 --direct-stores 2 --years 1 \
-  --promises "零加盟费,6个月回本,总部全包"
+--source "抖音广告" --hq-city 济南 \
+--total-fee 580000 --direct-stores 2 --years 1 \
+--promises "零加盟费,6个月回本,总部全包"
 
 # 案例匹配
 python tools/match_case.py --amount 900000 --category 奶茶 --location 县城
