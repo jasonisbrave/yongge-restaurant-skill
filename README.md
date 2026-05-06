@@ -24,11 +24,29 @@
 
 ---
 
+## 这是一个真正的 Skill
+
+✅ **顶层 [`SKILL.md`](./SKILL.md)** —— 标准 YAML frontmatter，符合 Anthropic Agent Skills 规范
+✅ **可执行工具** —— `tools/*.py` 三个零依赖 Python 脚本，模型可直接 shell 调用
+✅ **结构化语料** —— `corpus/` 9 篇 + `cases/` 30+ 案例，可直接 RAG
+✅ **状态机 + 风格** —— `skill/` 4 份 prompt 资源，对话流程已工程化
+
+**支持的 Agent 框架**：
+- Claude Skills（原生支持）
+- Cursor / Codex / Cline（通过 .cursorrules 或 system prompt 加载 SKILL.md）
+- Coze / Dify / 扣子（拷贝 SKILL.md 作为人设 + 工具脚本作为插件）
+- 自研 Agent（按 SKILL.md 第 5–6 节装载资源）
+
+> 详见 [快速接入](#快速接入到-agent)。
+
+---
+
 ## 仓库结构
 
 ```
 .
-├── README.md                          ← 你正在看
+├── SKILL.md                           ← 🤖 Agent 入口（YAML frontmatter）
+├── README.md                          ← 你正在看（人类入口）
 ├── LICENSE                            ← MIT
 ├── CONTRIBUTING.md                    ← 怎么贡献新案例 / 新金句
 ├── CHANGELOG.md                       ← 版本变更
@@ -67,6 +85,91 @@
 └── docs/                              ← 📐 设计文档
     ├── skill-架构.md                  ← skill 整体架构与交互流程
     └── 路线图.md                      ← 后续迭代方向
+
+tools/                                 ← 🛠️ 可执行工具（零依赖 Python）
+├── breakeven.py                       ← 保本线计算器
+├── quack_score.py                     ← 快招风险评分
+├── match_case.py                      ← 案例匹配
+└── README.md
+```
+
+---
+
+## 快速接入到 Agent
+
+### Claude Skills（推荐）
+```bash
+# 把整个仓库作为一个 skill 包加载
+git clone https://github.com/astro-wen/yongge-restaurant.skill
+# 然后在 Claude Skills 配置中指向该目录
+```
+Claude 会自动读取顶层 `SKILL.md`，按 frontmatter 描述决定何时激活，并按需读取子文档。
+
+### Cursor / Codex / Cline
+把 `SKILL.md` 内容粘贴进 `.cursorrules` / `AGENTS.md` / `.clinerules`：
+```bash
+cp SKILL.md .cursorrules
+# 或
+cp SKILL.md AGENTS.md
+```
+
+### Coze / Dify / 扣子
+- **人设**：复制 `SKILL.md` 全文作为 Bot 人设
+- **知识库**：上传 `corpus/` + `cases/` 作为 RAG 文档
+- **工具**：把 `tools/*.py` 包装成自定义插件
+
+### 任意支持 OpenAI 兼容协议的 Agent
+```python
+import requests
+with open("SKILL.md") as f:
+    system_prompt = f.read()
+
+resp = requests.post("/v1/chat/completions", json={
+    "model": "claude-3-5-sonnet",
+    "messages": [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": "我开了家奶茶店在县城综合体三楼，每天卖800"},
+    ]
+})
+```
+
+---
+
+## 工具调用示例
+
+```bash
+# 算账
+$ python3 tools/breakeven.py --daily-revenue 800 --daily-food-cost 250 \
+    --rent 8000 --labor 9000 --investment 350000 --category 奶茶
+
+{
+  "gross_margin": 0.6875,
+  "daily_breakeven": 896.97,
+  "achievement_rate": 0.8919,
+  "status": "🟡 接近保本",
+  "monthly_profit_estimate": -2000.0,
+  "risk_flags": ["🔴 房租占比 >20%", "🔴 月净亏损"],
+  "yongge_verdict": "还有救，但必须立刻调整。"
+}
+
+# 快招识别
+$ python3 tools/quack_score.py --source "抖音广告" --hq-city 济南 \
+    --total-fee 580000 --direct-stores 2 --years 1 \
+    --promises "零加盟费,6个月回本,总部全包"
+
+{
+  "score": 9,
+  "level": "🔴 高度疑似快招",
+  "yongge_verdict": "强烈建议放弃。已打款的留好证据，该起诉起诉。"
+}
+
+# 案例匹配
+$ python3 tools/match_case.py --amount 900000 --category 奶茶 --location 县城
+
+[
+  {"name": "七层奶茶大厦 · 长治", "match_score": 80.0, ...},
+  ...
+]
 ```
 
 ---
