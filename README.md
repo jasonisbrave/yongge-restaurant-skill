@@ -122,7 +122,7 @@
 ### Claude Skills
 
 ```bash
-git clone https://github.com/Astro-wen/yongge-restaurant-skill
+git clone https://github.com/jasonisbrave/yongge-restaurant-skill
 ```
 
 放入 Skills 目录后，Claude 会读取根目录 `SKILL.md` 的 frontmatter（name / description / version / license）完成自动注册。
