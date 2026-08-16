@@ -14,8 +14,8 @@ jobs:
           src: github/jasonisbrave
           dst: gitcode/jasonisbrave
           dst_token: ${{ secrets.GITCODE_TOKEN }}
+          dst_key: ${{ secrets.GITCODE_PRIVATE_KEY }}
           account_type: user
           static_list: "yongge-restaurant-skill"
           force_update: true
-          # 如改用 ssh 方式推送，配置 dst_key 并将公钥添加到 https://gitcode.com/setting/key-ssh
-          # dst_key: ${{ secrets.GITCODE_PRIVATE_KEY }}
+          debug: true
