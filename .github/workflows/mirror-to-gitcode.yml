@@ -1,0 +1,21 @@
+name: Mirror to GitCode
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mirror this repo to GitCode
+        uses: Yikun/hub-mirror-action@master
+        with:
+          src: github/jasonisbrave
+          dst: gitcode/jasonisbrave
+          dst_token: ${{ secrets.GITCODE_TOKEN }}
+          account_type: user
+          static_list: "yongge-restaurant-skill"
+          force_update: true
+          # 如改用 ssh 方式推送，配置 dst_key 并将公钥添加到 https://gitcode.com/setting/key-ssh
+          # dst_key: ${{ secrets.GITCODE_PRIVATE_KEY }}
